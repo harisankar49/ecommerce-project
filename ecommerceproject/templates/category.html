@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to The Baely, Experience shopping like a Breeze.....
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name }} - Baely Stores
+    {% else %}
+        The Baely premium..
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+        <div>
+            <div class="row my_row_class">
+                <div class="mx_auto">
+                    <h2><a href="{% url 'shop:allproductcat' %}">Our Product Collections </a></h2>
+                </div>
+            </div>
+        </div>
+        <div class="mx_auto">
+            {% if category.image %}
+                <img class="my_image" src="{{ category.image.url }}" alt="{{ category.name }}">
+            {% else %}
+                <p>No image available for {{ category.name }}</p>
+            {% endif %}
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">{{ category.name }}</h1>
+            <p class="text-justify">{{ category.description }}</p>
+        </div>
+    {% else %}
+        <div>
+            <img class="my_image my_image_padding" src="{% static 'img/Experince Purchasing likeBreeze......png' %}" class="fluid" alt="Our products" height="350px" width="1900px">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">Our products collections</h1>
+            <p class="text-center">We have a wide range of products to satisfy all of your needs..
+                Visit our retail shops and our website to get exciting offers and shopping experience like breeze..</p>
+            <h6 class="text-center">Our motto is customer satisfaction... </h6> <p class="text-center">Dont worry about shopping anymore!</p>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        {% for product in products.object_list %}
+            <div class="col-md-4"> <!-- Adjust the column size based on your layout -->
+                <div class="card text-center" style="min-width:18rem">
+                    <a href="{{product.get_url}}">
+                        {% if product.image %}
+                            <img src="{{product.image.url}}" alt="{{product.name}}">
+                        {% else %}
+                            <p>No image available for {{ product.name }}</p>
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h4>{{ product.name }}</h4>
+                        <p>{{ product.price }}</p>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                </div><div class="row"> <!-- Start a new row after every 3 products -->
+            {% endif %}
+        {% endfor %}
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+
+
+        <hr>
+        <div class="text-center">
+        {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+{% endfor %}
+        </div>
+{% endif %}
+    </div>
+    <br>
+    </div>
+{% endblock %}
